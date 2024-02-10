@@ -77,7 +77,7 @@
                     <p:column headerText="Editar/Excluir" exportable="false" style="text-align: center">
                         <p:commandButton icon="pi pi-pencil" update=":detalhesLocutor:detalhes-locutor"
                                          oncomplete="PF('detalhesLocutorDialog').show()"
-                                         styleClass="rounded-button"
+                                         styleClass="ui-button-raised rounded-button"
                                          process="@this">
                             <f:setPropertyActionListener value="#{locutor}"
                                                          target="#{locutorController.locutor}"/>
@@ -89,7 +89,7 @@
                         <p:commandButton icon="pi pi-trash"
                                          process="@this"
                                          oncomplete="PF('deleteLocutorDialog').show()"
-                                         styleClass="rounded-button ui-button-danger">
+                                         styleClass="ui-button-raised rounded-button ui-button-danger">
                             <f:setPropertyActionListener value="#{locutor}" target="#{locutorController.locutor}"/>
                         </p:commandButton>
                     </p:column>
@@ -107,7 +107,8 @@
                                 <p:outputLabel for="nome">Nome:</p:outputLabel>
                                 <p:inputText id="nome" value="#{locutorController.locutor.nome}"
                                              required="true"
-                                             requiredMessage="Nome é obrigatório."/>
+                                             requiredMessage="Nome é obrigatório."
+                                             styleClass="uppercase-input"/>
                             </div>
                             <div class="field" style="margin-top: 10px">
                                 <p:outputLabel for="telefone">Telefone:</p:outputLabel>
@@ -131,15 +132,15 @@
                     </f:facet>
                 </p:dialog>
 
-                <p:confirmDialog widgetVar="deleteLocutorDialog" showEffect="fade" width="300"
+                <p:confirmDialog widgetVar="deleteLocutorDialog" showEffect="fade" width="320"
                                  message="Remover este registro?" header="Confirmar" severity="warn">
-                    <p:commandButton value="Sim" icon="pi pi-check" actionListener="#{locutorController.excluir()}"
+                    <p:commandButton value="Confirmar" icon="pi pi-check" actionListener="#{locutorController.excluir()}"
                                      process="@this"
                                      update=":form:messages :form:dt-locutores"
-                                     styleClass="ui-button-raised ui-button-secondary ui-button-flat"
+                                     styleClass="ui-button-raised ui-button-danger"
                                      oncomplete="PF('deleteLocutorDialog').hide()"/>
-                    <p:commandButton value="Não" type="button"
-                                     styleClass="ui-button-raised ui-button-secondary ui-button-flat" icon="pi pi-times"
+                    <p:commandButton value="Cancelar" type="button"
+                                     styleClass="ui-button-raised ui-button-secondary" icon="pi pi-times"
                                      onclick="PF('deleteLocutorDialog').hide()"/>
                 </p:confirmDialog>
 

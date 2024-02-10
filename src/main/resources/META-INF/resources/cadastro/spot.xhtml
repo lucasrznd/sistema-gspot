@@ -43,11 +43,23 @@
                                          style="margin-right: .5rem">
                             <p:resetInput target=":detalhesSpot:detalhes-spot"/>
                         </p:commandButton>
+
+                        <i class="pi pi-ellipsis-v mr-2"/>
+
+                        <p:commandButton value="Buscar" icon="pi pi-search"
+                                         actionListener="#{spotController.init()}"
+                                         update=":buscarSpot:buscar-spot"
+                                         oncomplete="PF('buscarSpotDialog').show()"
+                                         styleClass="ui-button-raised"
+                                         style="margin-left: 10px">
+                            <p:resetInput target=":buscarSpot:buscar-spot"/>
+                        </p:commandButton>
                     </p:toolbarGroup>
                     <p:toolbarGroup align="right">
                         <p:commandButton value="Exportar" icon="pi pi-upload"
                                          styleClass="ui-button-raised ui-button-success" ajax="false">
-                            <p:dataExporter type="xls" target="dt-spots" fileName="relacao-spots"/>
+                            <p:dataExporter type="xls" target="dt-spots"
+                                            fileName="relacao-spots"/>
                         </p:commandButton>
                     </p:toolbarGroup>
                 </p:toolbar>
@@ -56,32 +68,28 @@
                              value="#{spotController.spotList}"
                              reflow="true"
                              rowKey="#{spot.codigo}" paginator="true" rows="5" rowSelectMode="add"
-                             paginatorPosition="bottom">
-                    <f:facet name="header">
-                        <div class="spot-table-header">
-                            <span style="font-weight: bold">SPOTS</span>
-                            <span class="filter-container ui-input-icon-left"> <i class="pi pi-search"></i>
-                        <p:inputText id="globalFilter" onkeyup="PF('dtSpots').filter()" placeholder="Buscar"/>
-                    </span>
-                        </div>
-                    </f:facet>
+                             paginatorPosition="bottom"
+                             currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} spots"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+                    <p:ajax event="cellEdit" listener="#{spotController.calcularValorTotal()}"
+                            update="valorTotal"/>
 
                     <p:column headerText="Código" sortBy="#{spot.codigo}" style="text-align: center">
                         <h:outputText value="#{spot.codigo}"/>
                     </p:column>
 
-                    <p:column headerText="Título" sortBy="#{spot.titulo}" filterBy="#{spot.titulo}"
-                              style="text-align: center">
+                    <p:column headerText="Título" style="text-align: center">
                         <h:outputText value="#{spot.titulo}"
                                       style="text-transform: uppercase"/>
                     </p:column>
 
-                    <p:column headerText="Nome Empresa" filterBy="#{spot.empresa.nome}"
+                    <p:column headerText="Nome Empresa"
                               style="text-align: center">
                         <p:outputLabel value="#{spot.empresa.nome}" style="text-transform: uppercase"/>
                     </p:column>
 
-                    <p:column headerText="Data de Gravação" style="text-align: center" filterBy="#{spot.data}">
+                    <p:column headerText="Data de Gravação" style="text-align: center">
                         <h:outputText value="#{spot.data}">
                             <f:convertDateTime locale="pt" pattern="dd/MM/yyyy" type="localDate"/>
                         </h:outputText>
@@ -96,15 +104,15 @@
                     </p:column>
 
                     <p:column headerText="Preço" style="text-align: center">
-                        <h:outputText value="#{spot.preco}">
-                            <f:convertNumber locale="pt" pattern="0.00"/>
+                        <h:outputText value="#{spot.preco}" style="font-weight: 700">
+                            <f:convertNumber currencySymbol="R$" type="currency"/>
                         </h:outputText>
                     </p:column>
 
                     <p:column headerText="Editar/Excluir" exportable="false" style="text-align: center">
                         <p:commandButton icon="pi pi-pencil" update=":detalhesSpot:detalhes-spot"
                                          oncomplete="PF('detalhesSpotDialog').show()"
-                                         styleClass="rounded-button"
+                                         styleClass="ui-button-raised rounded-button"
                                          process="@this">
                             <f:setPropertyActionListener value="#{spot}"
                                                          target="#{spotController.spotEntity}"/>
@@ -116,11 +124,17 @@
                         <p:commandButton icon="pi pi-trash"
                                          process="@this"
                                          oncomplete="PF('deleteSpotDialog').show()"
-                                         styleClass="rounded-button ui-button-danger">
+                                         styleClass="ui-button-raised rounded-button ui-button-danger">
                             <f:setPropertyActionListener value="#{spot}" target="#{spotController.spotEntity}"/>
                         </p:commandButton>
                     </p:column>
 
+                    <f:facet name="footer">
+                        <h:outputText id="valorTotal" value="#{spotController.calcularValorTotal()}"
+                                      style="font-weight: 700">
+                            <f:convertNumber currencySymbol="Valor Total - R$" type="currency"/>
+                        </h:outputText>
+                    </f:facet>
                 </p:dataTable>
             </h:form>
 
@@ -134,7 +148,8 @@
                                 <p:outputLabel for="titulo">Título:</p:outputLabel>
                                 <p:inputText id="titulo" value="#{spotController.spotEntity.titulo}"
                                              required="true"
-                                             requiredMessage="Título é obrigatório."/>
+                                             requiredMessage="Título é obrigatório."
+                                             styleClass="uppercase-input"/>
                             </div>
                             <div class="field" style="margin-top: 10px">
                                 <p:outputLabel for="empresa">Empresa:</p:outputLabel>
@@ -210,15 +225,15 @@
                     </f:facet>
                 </p:dialog>
 
-                <p:confirmDialog widgetVar="deleteSpotDialog" showEffect="fade" width="300"
+                <p:confirmDialog widgetVar="deleteSpotDialog" showEffect="fade" width="320"
                                  message="Remover este registro?" header="Confirmar" severity="warn">
-                    <p:commandButton value="Sim" icon="pi pi-check" actionListener="#{spotController.excluir()}"
+                    <p:commandButton value="Confirmar" icon="pi pi-check" actionListener="#{spotController.excluir()}"
                                      process="@this"
                                      update=":form:messages :form:dt-spots"
-                                     styleClass="ui-button-raised ui-button-secondary ui-button-flat"
+                                     styleClass="ui-button-raised ui-button-danger"
                                      oncomplete="PF('deleteSpotDialog').hide()"/>
-                    <p:commandButton value="Não" type="button"
-                                     styleClass="ui-button-raised ui-button-secondary ui-button-flat" icon="pi pi-times"
+                    <p:commandButton value="Cancelar" type="button"
+                                     styleClass="ui-button-raised ui-button-secondary" icon="pi pi-times"
                                      onclick="PF('deleteSpotDialog').hide()"/>
                 </p:confirmDialog>
 
@@ -229,6 +244,57 @@
                 </p:confirmDialog>
             </h:form>
             <!-- Fim Form Detalhes do Spot -->
+
+            <!-- Inicio Form Buscar Spot -->
+            <h:form id="buscarSpot">
+                <p:dialog header="Buscar Spot" showEffect="fade" modal="true" widgetVar="buscarSpotDialog"
+                          responsive="true" draggable="false" height="25vh" width="60vh">
+                    <p:outputPanel id="buscar-spot" class="ui-fluid">
+                        <p:outputPanel>
+                            <div class="field col-12 md:col-4">
+                                <p:outputLabel for="range" value="Intervalo de Data:"/>
+                                <p:datePicker id="range" selectionMode="range" value="#{spotController.range}"
+                                              required="true"
+                                              requiredMessage="Intervalo de Data é obrigatório."
+                                              readonlyInput="true"/>
+                            </div>
+                            <div class="field" style="margin-top: 10px">
+                                <p:outputLabel for="buscarEmpresa">Empresa:</p:outputLabel>
+                                <p:autoComplete id="buscarEmpresa"
+                                                value="#{spotController.spotEntity.empresa}"
+                                                completeMethod="#{spotController.buscarEmpresaPorNome}"
+                                                var="empresa"
+                                                itemLabel="#{empresa.nome}" itemValue="#{empresa}"
+                                                converter="#{empresaConverter}" forceSelection="true"
+                                                style="text-transform: uppercase;"/>
+                            </div>
+                            <div class="field" style="margin-top: 10px">
+                                <p:outputLabel for="buscarLocutor">Nome Locutor:</p:outputLabel>
+                                <p:autoComplete id="buscarLocutor"
+                                                value="#{spotController.spotEntity.locutor}"
+                                                completeMethod="#{spotController.buscarLocutorPorNome}"
+                                                var="locutor"
+                                                itemLabel="#{locutor.nome}" itemValue="#{locutor}"
+                                                converter="#{locutorConverter}" forceSelection="true"
+                                                style="text-transform: uppercase;"/>
+                            </div>
+                        </p:outputPanel>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Buscar" icon="pi pi-check"
+                                         actionListener="#{spotController.buscar()}"
+                                         update="buscar-spot :form:messages :form:dt-spots"
+                                         process="buscar-spot @this"
+                                         oncomplete="PF('buscarSpotDialog').hide()"
+                                         styleClass="ui-button-raised"/>
+                        <p:commandButton value="Cancelar" icon="pi pi-times"
+                                         onclick="PF('buscarSpotDialog').hide()"
+                                         class="ui-button-raised ui-button-secondary" type="button"/>
+                    </f:facet>
+                </p:dialog>
+            </h:form>
+            <!-- Fim Form Buscar Spot -->
         </div>
 
         <!-- Incluir rodapé -->

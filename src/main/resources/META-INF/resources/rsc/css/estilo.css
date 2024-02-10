@@ -6,6 +6,12 @@ h3 {
     color: #c8aa7e;
 }
 
+/* Transforma o texto para UPPERCASE */
+.uppercase-input {
+    text-transform: uppercase;
+}
+
+
 /* Centraliza os Botoes dos Modais - dialog */
 .modal-footer {
     text-align: center;

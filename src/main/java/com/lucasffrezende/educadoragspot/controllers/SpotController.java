@@ -48,7 +48,7 @@ public class SpotController implements Serializable {
         spotEntity.setPreco(service.calcularPreco(spotEntity));
     }
 
-    public String calcularValorTotal() {
+    public Double calcularValorTotal() {
         return service.calcularValorTotal(spotList);
     }
 

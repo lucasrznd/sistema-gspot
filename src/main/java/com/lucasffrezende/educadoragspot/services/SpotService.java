@@ -9,8 +9,8 @@ import com.lucasffrezende.educadoragspot.utils.enums.MensagemEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -53,35 +53,26 @@ public class SpotService {
         return precoSpot;
     }
 
-    public String calcularValorTotal(List<Spot> spotList) {
+    public Double calcularValorTotal(List<Spot> spotList) {
         double valorTotal = 0.0;
 
         for (Spot spot : spotList) {
             valorTotal += spot.getPreco();
         }
 
-        return new DecimalFormat("###,###.###").format(valorTotal);
+        return valorTotal;
     }
 
     public List<Spot> buscarSpot(List<LocalDate> datas, Spot spotEntity) {
         try {
-            String nomeEmpresa = "";
-            String nomeLocutor = "";
-
-            if (spotEntity.getEmpresa() != null) {
-                if (spotEntity.getEmpresa().getNome() != null) {
-                    nomeEmpresa = spotEntity.getEmpresa().getNome();
-                }
+            if (datas.isEmpty()) {
+                datas = datasPadroes();
             }
 
-            if (spotEntity.getLocutor() != null) {
-                if (spotEntity.getLocutor().getNome() != null) {
-                    nomeLocutor = spotEntity.getLocutor().getNome();
-                }
-            }
+            spotEntity = spotPadrao(spotEntity);
 
             List<Spot> spotList = repository.
-                    buscarPorIntervaloDataEmpresaNomeLocutorNome(datas.get(0), datas.get(1), nomeEmpresa, nomeLocutor);
+                    buscarPorIntervaloDataEmpresaNomeLocutorNome(datas.get(0), datas.get(1), spotEntity.getEmpresa().getNome(), spotEntity.getLocutor().getNome());
 
             if (spotList.isEmpty()) {
                 GrowlView.showWarn(MensagemEnum.MSG_ERRO.getMsg(), MensagemEnum.MSG_NENHUM_REGISTRO.getMsg());
@@ -92,6 +83,34 @@ public class SpotService {
             GrowlView.showError(MensagemEnum.MSG_AVISO.getMsg(), "Erro ao realizar busca.");
         }
         return null;
+    }
+
+    public List<LocalDate> datasPadroes() {
+        LocalDate dataInicio = LocalDate.of(LocalDate.now().getYear(), 01, 01);
+        LocalDate dataFim = LocalDate.of(LocalDate.now().getYear(), 12, 30);
+
+        List<LocalDate> datas = Arrays.asList(dataInicio, dataFim);
+        return datas;
+    }
+
+    public Spot spotPadrao(Spot spotEntity) {
+        if (spotEntity.getEmpresa() == null) {
+            spotEntity.setEmpresa(new Empresa());
+
+            if (spotEntity.getEmpresa().getNome() == null) {
+                spotEntity.getEmpresa().setNome("");
+            }
+        }
+
+        if (spotEntity.getLocutor() == null) {
+            spotEntity.setLocutor(new Locutor());
+
+            if (spotEntity.getLocutor().getNome() == null) {
+                spotEntity.getLocutor().setNome("");
+            }
+        }
+
+        return spotEntity;
     }
 
     public List<Empresa> buscarEmpresaPorNome(String nome) {
