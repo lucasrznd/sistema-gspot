@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<f:view contentType="text/html;charset=UTF-8" encoding="UTF-8">
+
+    <h:head>
+        <title>EducadoraGS - Novo Locutor</title>
+
+        <!-- Escala em dispositivos moveis -->
+        <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+
+        <!-- FavIcon e Import CSS -->
+        <link rel="shortcut icon" type="image/x-icon"
+              href="${pageContext.request.contextPath}/imgs/favicon-radio.png"/>
+
+        <!-- Import Javascript do primefaces Locale Brasil -->
+        <h:outputScript name="primefaces/locales/locale-pt.js"/>
+
+        <!-- Import Estilo Padrão CSS -->
+        <h:outputStylesheet name="/rsc/css/estilo.css"/>
+    </h:head>
+
+    <h:body>
+
+        <div class="card crud-demo">
+            <h:form id="form">
+                <!--Incluir menu-->
+                <ui:include src="/rsc/templates/menu.xhtml"/>
+
+                <p:growl id="messages" showDetail="true"/>
+
+                <p:toolbar>
+                    <p:toolbarGroup>
+                        <p:commandButton value="Novo" icon="pi pi-plus-circle"
+                                         actionListener="#{locutorController.init()}"
+                                         update=":detalhesLocutor:detalhes-locutor"
+                                         oncomplete="PF('detalhesLocutorDialog').show()"
+                                         styleClass="ui-button-raised"
+                                         style="margin-right: .5rem">
+                            <p:resetInput target=":detalhesLocutor:detalhes-locutor"/>
+                        </p:commandButton>
+                    </p:toolbarGroup>
+                </p:toolbar>
+
+                <p:dataTable id="dt-locutores" widgetVar="dtLocutores" var="locutor"
+                             value="#{locutorController.locutorList}"
+                             reflow="true"
+                             rowKey="#{locutor.codigo}" paginator="true" rows="5" rowSelectMode="add"
+                             paginatorPosition="bottom">
+                    <f:facet name="header">
+                        <div class="locutor-table-header">
+                            <span style="font-weight: bold">LOCUTORES</span>
+                            <span class="filter-container ui-input-icon-left"> <i class="pi pi-search"></i>
+                        <p:inputText id="globalFilter" onkeyup="PF('dtLocutores').filter()" placeholder="Buscar"/>
+                    </span>
+                        </div>
+                    </f:facet>
+
+                    <p:column headerText="Código" sortBy="#{locutor.codigo}" style="text-align: center">
+                        <h:outputText value="#{locutor.codigo}"/>
+                    </p:column>
+
+                    <p:column headerText="Título" sortBy="#{locutor.nome}" filterBy="#{locutor.nome}"
+                              style="text-align: center">
+                        <h:outputText value="#{locutor.nome}"
+                                      style="text-transform: uppercase"/>
+                    </p:column>
+
+                    <p:column headerText="Telefone" style="text-align: center">
+                        <p:outputLabel value="#{locutor.telefone}"/>
+                    </p:column>
+
+                    <p:column headerText="Editar/Excluir" exportable="false" style="text-align: center">
+                        <p:commandButton icon="pi pi-pencil" update=":detalhesLocutor:detalhes-locutor"
+                                         oncomplete="PF('detalhesLocutorDialog').show()"
+                                         styleClass="rounded-button"
+                                         process="@this">
+                            <f:setPropertyActionListener value="#{locutor}"
+                                                         target="#{locutorController.locutor}"/>
+                            <p:resetInput target=":detalhesLocutor:detalhes-locutor"/>
+                        </p:commandButton>
+
+                        <i class="pi pi-ellipsis-v mr-2"/>
+
+                        <p:commandButton icon="pi pi-trash"
+                                         process="@this"
+                                         oncomplete="PF('deleteLocutorDialog').show()"
+                                         styleClass="rounded-button ui-button-danger">
+                            <f:setPropertyActionListener value="#{locutor}" target="#{locutorController.locutor}"/>
+                        </p:commandButton>
+                    </p:column>
+
+                </p:dataTable>
+            </h:form>
+
+            <!-- Inicio Form Detalhes do Locutor -->
+            <h:form id="detalhesLocutor">
+                <p:dialog header="Detalhes do Locutor" showEffect="fade" modal="true" widgetVar="detalhesLocutorDialog"
+                          responsive="true" draggable="false" height="20vh" width="50vh">
+                    <p:outputPanel id="detalhes-locutor" class="ui-fluid">
+                        <p:outputPanel>
+                            <div class="field" style="margin-top: 10px">
+                                <p:outputLabel for="nome">Nome:</p:outputLabel>
+                                <p:inputText id="nome" value="#{locutorController.locutor.nome}"
+                                             required="true"
+                                             requiredMessage="Nome é obrigatório."/>
+                            </div>
+                            <div class="field" style="margin-top: 10px">
+                                <p:outputLabel for="telefone">Telefone:</p:outputLabel>
+                                <p:inputMask id="telefone" value="#{locutorController.locutor.telefone}"
+                                             mask="(99) 9 9999-9999"
+                                             maxlength="25"/>
+                            </div>
+                        </p:outputPanel>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Salvar" icon="pi pi-check"
+                                         actionListener="#{locutorController.salvar()}"
+                                         update="detalhes-locutor :form:messages :form:dt-locutores"
+                                         process="detalhes-locutor @this"
+                                         oncomplete="PF('detalhesLocutorDialog').hide()"
+                                         styleClass="ui-button-raised"/>
+                        <p:commandButton value="Sair" icon="pi pi-times"
+                                         onclick="PF('detalhesLocutorDialog').hide()"
+                                         class="ui-button-raised ui-button-secondary" type="button"/>
+                    </f:facet>
+                </p:dialog>
+
+                <p:confirmDialog widgetVar="deleteLocutorDialog" showEffect="fade" width="300"
+                                 message="Remover este registro?" header="Confirmar" severity="warn">
+                    <p:commandButton value="Sim" icon="pi pi-check" actionListener="#{locutorController.excluir()}"
+                                     process="@this"
+                                     update=":form:messages :form:dt-locutores"
+                                     styleClass="ui-button-raised ui-button-secondary ui-button-flat"
+                                     oncomplete="PF('deleteLocutorDialog').hide()"/>
+                    <p:commandButton value="Não" type="button"
+                                     styleClass="ui-button-raised ui-button-secondary ui-button-flat" icon="pi pi-times"
+                                     onclick="PF('deleteLocutorDialog').hide()"/>
+                </p:confirmDialog>
+
+                <p:confirmDialog global="true" showEffect="fade" width="300">
+                    <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check"/>
+                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-secondary"
+                                     icon="pi pi-times"/>
+                </p:confirmDialog>
+            </h:form>
+            <!-- Fim Form Detalhes do Locutor -->
+        </div>
+
+        <!-- Incluir rodapé -->
+        <ui:include src="/rsc/templates/rodape.xhtml"/>
+    </h:body>
+</f:view>
+</html>
