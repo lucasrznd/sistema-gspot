@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Entity
 @Table(name = "tb_spot")
+@ToString
 public class Spot {
 
     @Id
@@ -39,7 +41,7 @@ public class Spot {
     @JoinColumn(name = "contrato_ativo")
     private boolean contratoAtivo;
 
-    @JoinColumn(name = "valor_total")
-    private Double valorTotal;
+    @JoinColumn(name = "preco")
+    private Double preco;
 
 }

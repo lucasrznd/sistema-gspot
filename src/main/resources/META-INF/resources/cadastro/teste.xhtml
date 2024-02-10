@@ -35,43 +35,37 @@
 
                 <p:toolbar>
                     <p:toolbarGroup>
-                        <p:commandButton value="Novo" icon="pi pi-plus-circle"
-                                         actionListener="#{spotController.init()}"
-                                         update=":detalhesSpot:detalhes-spot"
-                                         oncomplete="PF('detalhesSpotDialog').show()"
+                        <p:commandButton value="Buscar" icon="pi pi-search"
+                                         actionListener="#{testeController.init()}"
+                                         update=":buscarSpot:buscar-spot"
+                                         oncomplete="PF('buscarSpotDialog').show()"
                                          styleClass="ui-button-raised"
                                          style="margin-right: .5rem">
-                            <p:resetInput target=":detalhesSpot:detalhes-spot"/>
+                            <p:resetInput target=":buscarSpot:buscar-spot"/>
                         </p:commandButton>
                     </p:toolbarGroup>
                     <p:toolbarGroup align="right">
                         <p:commandButton value="Exportar" icon="pi pi-upload"
                                          styleClass="ui-button-raised ui-button-success" ajax="false">
-                            <p:dataExporter type="xls" target="dt-spots" fileName="relacao-spots"/>
+                            <p:dataExporter type="xls" target="dt-spots" fileName="relacao-spots" exportFooter="true"/>
                         </p:commandButton>
                     </p:toolbarGroup>
                 </p:toolbar>
 
                 <p:dataTable id="dt-spots" widgetVar="dtSpots" var="spot"
-                             value="#{spotController.spotList}"
+                             value="#{testeController.spotList}"
                              reflow="true"
                              rowKey="#{spot.codigo}" paginator="true" rows="5" rowSelectMode="add"
                              paginatorPosition="bottom">
-                    <f:facet name="header">
-                        <div class="spot-table-header">
-                            <span style="font-weight: bold">SPOTS</span>
-                            <span class="filter-container ui-input-icon-left"> <i class="pi pi-search"></i>
-                        <p:inputText id="globalFilter" onkeyup="PF('dtSpots').filter()" placeholder="Buscar"/>
-                    </span>
-                        </div>
-                    </f:facet>
+
+                    <p:ajax event="cellEdit" listener="#{testeController.calcularValorTotal()}"
+                            update="valorTotal"/>
 
                     <p:column headerText="Código" sortBy="#{spot.codigo}" style="text-align: center">
                         <h:outputText value="#{spot.codigo}"/>
                     </p:column>
 
-                    <p:column headerText="Título" sortBy="#{spot.titulo}" filterBy="#{spot.titulo}"
-                              style="text-align: center">
+                    <p:column headerText="Título" sortBy="#{spot.titulo}" style="text-align: center">
                         <h:outputText value="#{spot.titulo}"
                                       style="text-transform: uppercase"/>
                     </p:column>
@@ -102,13 +96,13 @@
                     </p:column>
 
                     <p:column headerText="Editar/Excluir" exportable="false" style="text-align: center">
-                        <p:commandButton icon="pi pi-pencil" update=":detalhesSpot:detalhes-spot"
-                                         oncomplete="PF('detalhesSpotDialog').show()"
+                        <p:commandButton icon="pi pi-pencil" update=":buscarSpot:buscar-spot"
+                                         oncomplete="PF('buscarSpotDialog').show()"
                                          styleClass="rounded-button"
                                          process="@this">
                             <f:setPropertyActionListener value="#{spot}"
-                                                         target="#{spotController.spotEntity}"/>
-                            <p:resetInput target=":detalhesSpot:detalhes-spot"/>
+                                                         target="#{testeController.spotEntity}"/>
+                            <p:resetInput target=":buscarSpot:buscar-spot"/>
                         </p:commandButton>
 
                         <i class="pi pi-ellipsis-v mr-2"/>
@@ -117,102 +111,68 @@
                                          process="@this"
                                          oncomplete="PF('deleteSpotDialog').show()"
                                          styleClass="rounded-button ui-button-danger">
-                            <f:setPropertyActionListener value="#{spot}" target="#{spotController.spotEntity}"/>
+                            <f:setPropertyActionListener value="#{spot}" target="#{testeController.spotEntity}"/>
                         </p:commandButton>
                     </p:column>
 
+                    <f:facet name="footer">
+                        <h:outputText id="valorTotal" value="Valor Total R$: #{testeController.calcularValorTotal()}"/>
+                    </f:facet>
                 </p:dataTable>
             </h:form>
 
-            <!-- Inicio Form Detalhes do Spot -->
-            <h:form id="detalhesSpot">
-                <p:dialog header="Detalhes do Spot" showEffect="fade" modal="true" widgetVar="detalhesSpotDialog"
-                          responsive="true" draggable="false" height="45vh" width="50vh">
-                    <p:outputPanel id="detalhes-spot" class="ui-fluid">
+            <!-- Inicio Form Buscar Spot -->
+            <h:form id="buscarSpot">
+                <p:dialog header="Buscar Spot" showEffect="fade" modal="true" widgetVar="buscarSpotDialog"
+                          responsive="true" draggable="false" height="25vh" width="60vh">
+                    <p:outputPanel id="buscar-spot" class="ui-fluid">
                         <p:outputPanel>
-                            <div class="field" style="margin-top: 10px">
-                                <p:outputLabel for="titulo">Título:</p:outputLabel>
-                                <p:inputText id="titulo" value="#{spotController.spotEntity.titulo}"
-                                             required="true"
-                                             requiredMessage="Título é obrigatório."/>
+                            <div class="field col-12 md:col-4">
+                                <p:outputLabel for="range" value="Intervalo de Data:"/>
+                                <p:datePicker id="range" selectionMode="range" value="#{testeController.range}"
+                                              required="true"
+                                              requiredMessage="Intervalo de Data é obrigatório."
+                                              readonlyInput="true"/>
                             </div>
                             <div class="field" style="margin-top: 10px">
                                 <p:outputLabel for="empresa">Empresa:</p:outputLabel>
                                 <p:autoComplete id="empresa"
-                                                value="#{spotController.spotEntity.empresa}"
-                                                completeMethod="#{spotController.buscarEmpresaPorNome}"
+                                                value="#{testeController.spotEntity.empresa}"
+                                                completeMethod="#{testeController.buscarEmpresaPorNome}"
                                                 var="empresa"
                                                 itemLabel="#{empresa.nome}" itemValue="#{empresa}"
                                                 converter="#{empresaConverter}" forceSelection="true"
-                                                style="text-transform: uppercase;"
-                                                required="true"
-                                                requiredMessage="Empresa é obrigatório."/>
+                                                style="text-transform: uppercase;"/>
                             </div>
                             <div class="field" style="margin-top: 10px">
                                 <p:outputLabel for="locutor">Nome Locutor:</p:outputLabel>
                                 <p:autoComplete id="locutor"
-                                                value="#{spotController.spotEntity.locutor}"
-                                                completeMethod="#{spotController.buscarLocutorPorNome}"
+                                                value="#{testeController.spotEntity.locutor}"
+                                                completeMethod="#{testeController.buscarLocutorPorNome}"
                                                 var="locutor"
                                                 itemLabel="#{locutor.nome}" itemValue="#{locutor}"
                                                 converter="#{locutorConverter}" forceSelection="true"
-                                                style="text-transform: uppercase;"
-                                                required="true"
-                                                requiredMessage="Nome Locutor é obrigatório."/>
-                            </div>
-                            <div class="field" style="margin-top: 10px">
-                                <p:outputLabel for="duracao">Duração:</p:outputLabel>
-                                <p:inputMask id="duracao" mask="9:99"
-                                             value="#{spotController.duracaoString}"
-                                             required="true"
-                                             requiredMessage="Duração é obrigatório.">
-                                    <p:ajax event="change"
-                                            listener="#{spotController.converterDuracao()}"
-                                            update="preco"/>
-                                </p:inputMask>
-                            </div>
-                            <div class="field" style="margin-top: 10px">
-                                <p:outputLabel for="contratoAtivo">Contrato Ativo:</p:outputLabel>
-                                <p:selectBooleanCheckbox id="contratoAtivo"
-                                                         value="#{spotController.spotEntity.contratoAtivo}"
-                                                         required="true"
-                                                         requiredMessage="Contrato Ativo é obrigatório."
-                                                         style="margin-left: 5px">
-                                    <p:ajax listener="#{spotController.calcularPreco()}"
-                                            update="preco"/>
-                                </p:selectBooleanCheckbox>
-                            </div>
-                            <div class="field" style="margin-top: 10px">
-                                <p:outputLabel for="preco">Valor Total:</p:outputLabel>
-                                <p:inputNumber id="preco" value="#{spotController.spotEntity.preco}"
-                                               symbol=" R$"
-                                               symbolPosition="s"
-                                               decimalSeparator=","
-                                               thousandSeparator="."
-                                               decimalPlaces="2"
-                                               required="true"
-                                               requiredMessage="Preço é obrigatório."
-                                               disabled="true"/>
+                                                style="text-transform: uppercase;"/>
                             </div>
                         </p:outputPanel>
                     </p:outputPanel>
 
                     <f:facet name="footer">
-                        <p:commandButton value="Salvar" icon="pi pi-check"
-                                         actionListener="#{spotController.salvar()}"
-                                         update="detalhes-spot :form:messages :form:dt-spots"
-                                         process="detalhes-spot @this"
-                                         oncomplete="PF('detalhesSpotDialog').hide()"
+                        <p:commandButton value="Buscar" icon="pi pi-check"
+                                         actionListener="#{testeController.buscar()}"
+                                         update="buscar-spot :form:messages :form:dt-spots"
+                                         process="buscar-spot @this"
+                                         oncomplete="PF('buscarSpotDialog').hide()"
                                          styleClass="ui-button-raised"/>
                         <p:commandButton value="Cancelar" icon="pi pi-times"
-                                         onclick="PF('detalhesSpotDialog').hide()"
+                                         onclick="PF('buscarSpotDialog').hide()"
                                          class="ui-button-raised ui-button-secondary" type="button"/>
                     </f:facet>
                 </p:dialog>
 
                 <p:confirmDialog widgetVar="deleteSpotDialog" showEffect="fade" width="300"
                                  message="Remover este registro?" header="Confirmar" severity="warn">
-                    <p:commandButton value="Sim" icon="pi pi-check" actionListener="#{spotController.excluir()}"
+                    <p:commandButton value="Sim" icon="pi pi-check" actionListener="#{testeController.excluir()}"
                                      process="@this"
                                      update=":form:messages :form:dt-spots"
                                      styleClass="ui-button-raised ui-button-secondary ui-button-flat"
@@ -228,7 +188,7 @@
                                      icon="pi pi-times"/>
                 </p:confirmDialog>
             </h:form>
-            <!-- Fim Form Detalhes do Spot -->
+            <!-- Fim Form Buscar Spot -->
         </div>
 
         <!-- Incluir rodapé -->

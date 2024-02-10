@@ -9,6 +9,7 @@ import com.lucasffrezende.educadoragspot.utils.enums.MensagemEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -50,6 +51,47 @@ public class SpotService {
         }
 
         return precoSpot;
+    }
+
+    public String calcularValorTotal(List<Spot> spotList) {
+        double valorTotal = 0.0;
+
+        for (Spot spot : spotList) {
+            valorTotal += spot.getPreco();
+        }
+
+        return new DecimalFormat("###,###.###").format(valorTotal);
+    }
+
+    public List<Spot> buscarSpot(List<LocalDate> datas, Spot spotEntity) {
+        try {
+            String nomeEmpresa = "";
+            String nomeLocutor = "";
+
+            if (spotEntity.getEmpresa() != null) {
+                if (spotEntity.getEmpresa().getNome() != null) {
+                    nomeEmpresa = spotEntity.getEmpresa().getNome();
+                }
+            }
+
+            if (spotEntity.getLocutor() != null) {
+                if (spotEntity.getLocutor().getNome() != null) {
+                    nomeLocutor = spotEntity.getLocutor().getNome();
+                }
+            }
+
+            List<Spot> spotList = repository.
+                    buscarPorIntervaloDataEmpresaNomeLocutorNome(datas.get(0), datas.get(1), nomeEmpresa, nomeLocutor);
+
+            if (spotList.isEmpty()) {
+                GrowlView.showWarn(MensagemEnum.MSG_ERRO.getMsg(), MensagemEnum.MSG_NENHUM_REGISTRO.getMsg());
+            }
+
+            return spotList;
+        } catch (Exception e) {
+            GrowlView.showError(MensagemEnum.MSG_AVISO.getMsg(), "Erro ao realizar busca.");
+        }
+        return null;
     }
 
     public List<Empresa> buscarEmpresaPorNome(String nome) {

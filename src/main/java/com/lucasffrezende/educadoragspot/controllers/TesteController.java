@@ -18,7 +18,7 @@ import java.util.List;
 @Component
 @ViewScoped
 @Data
-public class SpotController implements Serializable {
+public class TesteController implements Serializable {
 
     @Autowired
     private SpotService service;
