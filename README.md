@@ -51,7 +51,7 @@ cd sistema-controle-spots
 mvn clean install
 ```
 
-4. Execute o arquivo JAR gerado na pasta `target` ou implante o JAR em seu servidor de aplicação.
+5. Execute o arquivo JAR gerado na pasta `target` ou implante o JAR em seu servidor de aplicação.
 
 ## Contribuindo
 
