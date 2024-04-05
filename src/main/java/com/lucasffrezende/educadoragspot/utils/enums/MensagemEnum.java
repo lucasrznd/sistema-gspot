@@ -6,7 +6,7 @@ import lombok.Getter;
 public enum MensagemEnum {
 
     MSG_SUCESSO("Sucesso."),
-    MSG_AVISO("Aviso"),
+    MSG_AVISO("Aviso."),
     MSG_ERRO("Erro."),
     MSG_SALVO_SUCESSO("Registro salvo com sucesso."),
     MSG_ERRO_SALVAR("Erro ao salvar registro."),

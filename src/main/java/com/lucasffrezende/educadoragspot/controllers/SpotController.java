@@ -25,7 +25,6 @@ public class SpotController implements Serializable {
     private Spot spotEntity;
     private List<Spot> spotList;
 
-    private String duracaoString;
     private List<LocalDate> range;
 
     @PostConstruct
@@ -35,13 +34,7 @@ public class SpotController implements Serializable {
         spotEntity.setEmpresa(new Empresa());
 
         spotList = service.listar();
-        duracaoString = null;
         range = new ArrayList<>();
-    }
-
-    public void converterDuracao() {
-        spotEntity.setDuracao(service.converterStringParaDouble(duracaoString));
-        calcularPreco();
     }
 
     public void calcularPreco() {

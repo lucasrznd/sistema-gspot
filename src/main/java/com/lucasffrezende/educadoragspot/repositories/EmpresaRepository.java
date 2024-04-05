@@ -11,4 +11,6 @@ public interface EmpresaRepository extends JpaRepository<Empresa, Long> {
     @Query("SELECT e FROM Empresa e WHERE e.nome LIKE %?1%")
     List<Empresa> buscaPorNome(String nome);
 
+    Empresa findByNome(String nome);
+
 }

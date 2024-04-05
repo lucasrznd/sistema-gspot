@@ -31,7 +31,7 @@
                 <!--Incluir menu-->
                 <ui:include src="/rsc/templates/menu.xhtml"/>
 
-                <p:growl id="messages" showDetail="true"/>
+                <p:growl id="messages" showDetail="true" showSummary="false"/>
 
                 <p:toolbar>
                     <p:toolbarGroup>
@@ -59,7 +59,7 @@
                         <p:commandButton value="Exportar" icon="pi pi-upload"
                                          styleClass="ui-button-raised ui-button-success" ajax="false">
                             <p:dataExporter type="xls" target="dt-spots"
-                                            fileName="relacao-spots"/>
+                                            fileName="relacao-spots.#{planilhaController.dataNomeArquivo()}"/>
                         </p:commandButton>
                     </p:toolbarGroup>
                 </p:toolbar>
@@ -96,7 +96,9 @@
                     </p:column>
 
                     <p:column headerText="Duração" style="text-align: center">
-                        <p:outputLabel value="#{spot.duracao}"/>
+                        <h:outputText value="#{spot.duracao}">
+                            <f:convertNumber pattern="0.00"/>
+                        </h:outputText>
                     </p:column>
 
                     <p:column headerText="Nome do Locutor" style="text-align: center">
@@ -141,7 +143,7 @@
             <!-- Inicio Form Detalhes do Spot -->
             <h:form id="detalhesSpot">
                 <p:dialog header="Detalhes do Spot" showEffect="fade" modal="true" widgetVar="detalhesSpotDialog"
-                          responsive="true" draggable="false" height="45vh" width="50vh">
+                          responsive="true" draggable="false" height="53vh" width="50vh">
                     <p:outputPanel id="detalhes-spot" class="ui-fluid">
                         <p:outputPanel>
                             <div class="field" style="margin-top: 10px">
@@ -176,13 +178,17 @@
                                                 requiredMessage="Nome Locutor é obrigatório."/>
                             </div>
                             <div class="field" style="margin-top: 10px">
+                                <p:outputLabel for="data">Data:</p:outputLabel>
+                                <p:datePicker id="data" value="#{spotController.spotEntity.data}"/>
+                            </div>
+                            <div class="field" style="margin-top: 10px">
                                 <p:outputLabel for="duracao">Duração:</p:outputLabel>
-                                <p:inputMask id="duracao" mask="9:99"
-                                             value="#{spotController.duracaoString}"
+                                <p:inputMask id="duracao" mask="9.99"
+                                             value="#{spotController.spotEntity.duracao}"
                                              required="true"
                                              requiredMessage="Duração é obrigatório.">
                                     <p:ajax event="change"
-                                            listener="#{spotController.converterDuracao()}"
+                                            listener="#{spotController.calcularPreco()}"
                                             update="preco"/>
                                 </p:inputMask>
                             </div>
@@ -198,7 +204,7 @@
                                 </p:selectBooleanCheckbox>
                             </div>
                             <div class="field" style="margin-top: 10px">
-                                <p:outputLabel for="preco">Valor Total:</p:outputLabel>
+                                <p:outputLabel for="preco">Preço:</p:outputLabel>
                                 <p:inputNumber id="preco" value="#{spotController.spotEntity.preco}"
                                                symbol=" R$"
                                                symbolPosition="s"
@@ -217,7 +223,7 @@
                                          actionListener="#{spotController.salvar()}"
                                          update="detalhes-spot :form:messages :form:dt-spots"
                                          process="detalhes-spot @this"
-                                         oncomplete="PF('detalhesSpotDialog').hide()"
+                                         oncomplete="if (!args.validationFailed) {PF('detalhesSpotDialog').hide();}"
                                          styleClass="ui-button-raised"/>
                         <p:commandButton value="Cancelar" icon="pi pi-times"
                                          onclick="PF('detalhesSpotDialog').hide()"
@@ -286,7 +292,7 @@
                                          actionListener="#{spotController.buscar()}"
                                          update="buscar-spot :form:messages :form:dt-spots"
                                          process="buscar-spot @this"
-                                         oncomplete="PF('buscarSpotDialog').hide()"
+                                         oncomplete="if (!args.validationFailed) {PF('buscarSpotDialog').hide();}"
                                          styleClass="ui-button-raised"/>
                         <p:commandButton value="Cancelar" icon="pi pi-times"
                                          onclick="PF('buscarSpotDialog').hide()"

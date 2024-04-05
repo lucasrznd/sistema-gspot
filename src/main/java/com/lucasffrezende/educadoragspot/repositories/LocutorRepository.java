@@ -11,4 +11,6 @@ public interface LocutorRepository extends JpaRepository<Locutor, Long> {
     @Query("SELECT l FROM Locutor l WHERE l.nome LIKE %?1%")
     List<Locutor> buscaPorNome(String nome);
 
+    Locutor findByNome(String nome);
+
 }

@@ -5,6 +5,7 @@ import com.lucasffrezende.educadoragspot.repositories.EmpresaRepository;
 import com.lucasffrezende.educadoragspot.utils.GrowlView;
 import com.lucasffrezende.educadoragspot.utils.enums.MensagemEnum;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -44,6 +45,13 @@ public class EmpresaService {
 
     public void salvar(Empresa empresa) {
         try {
+            Empresa empresaExistente = repository.findByNome(empresa.getNome());
+
+            if (empresaExistente != null) {
+                GrowlView.showError(MensagemEnum.MSG_ERRO.getMsg(), "Empresa já cadastrada.");
+                return;
+            }
+
             repository.save(empresa);
 
             GrowlView.showInfo(MensagemEnum.MSG_SUCESSO.getMsg(), MensagemEnum.MSG_SALVO_SUCESSO.getMsg());
@@ -57,6 +65,8 @@ public class EmpresaService {
             repository.deleteById(codigo);
 
             GrowlView.showInfo(MensagemEnum.MSG_SUCESSO.getMsg(), MensagemEnum.MSG_EXCLUIDO_SUCESSO.getMsg());
+        } catch (DataIntegrityViolationException e) {
+            GrowlView.showError(MensagemEnum.MSG_ERRO.getMsg(), "Empresa selecionada possui spots ativos.");
         } catch (Exception e) {
             GrowlView.showError(MensagemEnum.MSG_ERRO.getMsg(), MensagemEnum.MSG_ERRO_EXCLUIR.getMsg());
         }

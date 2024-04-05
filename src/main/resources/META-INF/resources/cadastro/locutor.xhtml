@@ -64,7 +64,7 @@
                         <h:outputText value="#{locutor.codigo}"/>
                     </p:column>
 
-                    <p:column headerText="Título" sortBy="#{locutor.nome}" filterBy="#{locutor.nome}"
+                    <p:column headerText="Nome" sortBy="#{locutor.nome}" filterBy="#{locutor.nome}"
                               style="text-align: center">
                         <h:outputText value="#{locutor.nome}"
                                       style="text-transform: uppercase"/>
@@ -124,7 +124,7 @@
                                          actionListener="#{locutorController.salvar()}"
                                          update="detalhes-locutor :form:messages :form:dt-locutores"
                                          process="detalhes-locutor @this"
-                                         oncomplete="PF('detalhesLocutorDialog').hide()"
+                                         oncomplete="if (!args.validationFailed) {PF('detalhesLocutorDialog').hide();}"
                                          styleClass="ui-button-raised"/>
                         <p:commandButton value="Cancelar" icon="pi pi-times"
                                          onclick="PF('detalhesLocutorDialog').hide()"

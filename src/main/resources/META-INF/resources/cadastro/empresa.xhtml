@@ -64,7 +64,7 @@
                         <h:outputText value="#{empresa.codigo}"/>
                     </p:column>
 
-                    <p:column headerText="Título" sortBy="#{empresa.nome}" filterBy="#{empresa.nome}"
+                    <p:column headerText="Nome" sortBy="#{empresa.nome}" filterBy="#{empresa.nome}"
                               style="text-align: center">
                         <h:outputText value="#{empresa.nome}"
                                       style="text-transform: uppercase"/>
@@ -124,7 +124,7 @@
                                          actionListener="#{empresaController.salvar()}"
                                          update="detalhes-empresa :form:messages :form:dt-empresas"
                                          process="detalhes-empresa @this"
-                                         oncomplete="PF('detalhesEmpresaDialog').hide()"
+                                         oncomplete="if (!args.validationFailed) {PF('detalhesEmpresaDialog').hide();}"
                                          styleClass="ui-button-raised"/>
                         <p:commandButton value="Cancelar" icon="pi pi-times"
                                          onclick="PF('detalhesEmpresaDialog').hide()"

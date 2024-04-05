@@ -29,12 +29,6 @@ public class SpotService {
         return repository.findAll();
     }
 
-    public Double converterStringParaDouble(String duracaoString) {
-        String duracaoSemFormato = duracaoString.replaceAll(":", ".");
-        double duracaoDouble = Double.parseDouble(duracaoSemFormato);
-        return duracaoDouble;
-    }
-
     public Double calcularPreco(Spot spotEntity) {
         double precoSpot = 0.0;
 
@@ -75,7 +69,7 @@ public class SpotService {
                     buscarPorIntervaloDataEmpresaNomeLocutorNome(datas.get(0), datas.get(1), spotEntity.getEmpresa().getNome(), spotEntity.getLocutor().getNome());
 
             if (spotList.isEmpty()) {
-                GrowlView.showWarn(MensagemEnum.MSG_ERRO.getMsg(), MensagemEnum.MSG_NENHUM_REGISTRO.getMsg());
+                GrowlView.showWarn(MensagemEnum.MSG_AVISO.getMsg(), MensagemEnum.MSG_NENHUM_REGISTRO.getMsg());
             }
 
             return spotList;
@@ -87,7 +81,7 @@ public class SpotService {
 
     public List<LocalDate> datasPadroes() {
         LocalDate dataInicio = LocalDate.of(LocalDate.now().getYear(), 01, 01);
-        LocalDate dataFim = LocalDate.of(LocalDate.now().getYear(), 12, 30);
+        LocalDate dataFim = LocalDate.of(LocalDate.now().getYear(), 12, 31);
 
         List<LocalDate> datas = Arrays.asList(dataInicio, dataFim);
         return datas;
@@ -123,7 +117,9 @@ public class SpotService {
 
     public void salvar(Spot spotEntity) {
         try {
-            spotEntity.setData(LocalDate.now());
+            if (spotEntity.getData() == null) {
+                spotEntity.setData(LocalDate.now());
+            }
             repository.save(spotEntity);
 
             GrowlView.showInfo(MensagemEnum.MSG_SUCESSO.getMsg(), MensagemEnum.MSG_SALVO_SUCESSO.getMsg());
