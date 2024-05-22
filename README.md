@@ -1,36 +1,49 @@
-# Sistema de Controle de SPOTS de Rádio
+<h2 align="center">SPOT Management System</h2>
 
-O Sistema de Controle de SPOTS de Rádio é uma aplicação Java Fullstack desenvolvida para facilitar o gerenciamento e cadastro de SPOTS publicitários vinculados a rádios. Um SPOT é uma propaganda curta veiculada em uma estação de rádio, geralmente pagos pelas empresas para divulgar seus produtos ou serviços.
+<div align="center">
 
-## Funcionalidades Principais
+![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
+![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)
+![Hibernate](https://img.shields.io/badge/Hibernate-59666C?style=for-the-badge&logo=Hibernate&logoColor=white)
+</div>
 
-- Cadastro de SPOTS, incluindo informações sobre o locutor, a empresa anunciante e outros detalhes relevantes.
-- Visualização e edição de SPOTS cadastrados.
-- Pesquisa avançada para encontrar SPOTS específicos.
+<p align="center">
+ <a href="#description">Description</a> • 
+ <a href="#features">Features</a> • 
+ <a href="#installation">Installation</a> •
+ <a href="#contribution">Contribution</a> 
+</p>
 
-## Tecnologias Utilizadas
+<h2 id="description">📙 Description</h2>
+The Radio SPOT Management System is a full-stack Java application developed to facilitate the management and registration of advertising SPOTS linked to radio stations. A SPOT is a short advertisement broadcast on a radio station, usually paid for by companies to promote their products or services.
 
-- Java: Linguagem de programação principal.
-- Spring Framework: Utilizado para a camada de backend, incluindo Spring Boot e Spring Data.
-- JSF (JavaServer Faces): Framework utilizado para o desenvolvimento da camada de frontend.
-- Primefaces: Componentes utilizados para a criação de uma interface de usuário rica e interativa.
+<h2 id="features">✨ Features</h2>
 
-## Como Executar o Projeto
+- **SPOT Registration**: Including information about the announcer, the advertising company, and other relevant details.
+- **View** and **Edit** Registered SPOTS.
+- **Advanced Search**: To find specific SPOTS.
 
-### Requisitos Prévios
+### Technologies Used
 
-- Java Development Kit (JDK) 17 ou superior.
-- Maven para gerenciamento de dependências.
+- **Java**: Primary programming language.
+- **Spring Framework**: Used for the backend layer, including Spring Boot and Spring Data.
+- **JSF (JavaServer Faces)**: Framework used for developing the frontend layer.
+- **Primefaces**: Components used to create a rich and interactive user interface.
 
-### Passos para Execução
+### Prerequisites
 
-1. Clone o repositório para o seu ambiente local:
+- Java Development Kit (JDK) 17 or higher.
+- Maven for dependency management.
+
+<h2 id="installation">🛠️ Installation</h2>
+
+1. Clone the repository to your local environment:
 
 ```
 git clone https://github.com/lucasrznd/sistema-gspot.git
 ```
 
-2. Configure a sua base de dados (eu utilizei mySQL, mas utilize o de sua preferência):
+2. Configure your database (I used MySQL, but use your preferred database):
 
 ```
 spring.datasource.url=${MYSQL_URL}
@@ -39,20 +52,29 @@ spring.datasource.password=${MYSQL_PASSWORD}
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 ```
 
-3. Navegue até o diretório do projeto:
+3. Navigate to the project directory:
 
 ```
 cd sistema-controle-spots
 ```
 
-4. Compile o projeto utilizando o Maven:
+4. Compile the project using Maven:
 
 ```
 mvn clean install
 ```
 
-5. Execute o arquivo JAR gerado na pasta `target` ou implante o JAR em seu servidor de aplicação.
+5. Run the generated JAR file in the target folder or deploy the JAR to your application server.
 
-## Contribuindo
+<h2 id="contribution">🤝 Contribution</h2>
 
-Contribuições são bem-vindas! Sinta-se à vontade para abrir uma issue se encontrar algum problema ou sugerir melhorias para o projeto.
+Contributions are welcome! If you have suggestions, improvements, or find bugs, feel free to open an issue or submit a pull request.
+
+<h2 id="author">👨🏻‍💻 Author</h2>
+
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/lucasrznd"><img src="https://avatars.githubusercontent.com/u/101664450?v=4&v=" width="115px;" alt="Lucas Rezende"/><br /><sub><b>Lucas Rezende</b></sub></a><br/><a title="Código">💻</a></td>
+  </tbody>
+</table>
