@@ -14,13 +14,13 @@ public class Locutor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "codigo")
+    @Column(name = "id")
     private Long codigo;
 
-    @Column(name = "nome")
+    @Column(name = "name")
     private String nome;
 
-    @Column(name = "telefone")
+    @Column(name = "phone_number")
     private String telefone;
 
 }

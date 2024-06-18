@@ -18,30 +18,30 @@ public class Spot {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "codigo")
+    @Column(name = "id")
     private Long codigo;
 
-    @Column(name = "data_spot")
+    @Column(name = "spot_date")
     private LocalDate data;
 
-    @Column(name = "titulo")
+    @Column(name = "title")
     private String titulo;
 
     @ManyToOne
-    @JoinColumn(name = "empresa_codigo")
+    @JoinColumn(name = "company_id")
     private Empresa empresa;
 
     @ManyToOne
-    @JoinColumn(name = "locutor_codigo")
+    @JoinColumn(name = "announcer_id")
     private Locutor locutor;
 
-    @JoinColumn(name = "duracao")
+    @Column(name = "duration")
     private Double duracao;
 
-    @JoinColumn(name = "contrato_ativo")
+    @Column(name = "active_contract")
     private boolean contratoAtivo;
 
-    @JoinColumn(name = "preco")
+    @Column(name = "price")
     private Double preco;
 
 }
