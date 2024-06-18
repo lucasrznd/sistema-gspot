@@ -30,11 +30,6 @@ The Radio SPOT Management System is a full-stack Java application developed to f
 - **JSF (JavaServer Faces)**: Framework used for developing the frontend layer.
 - **Primefaces**: Components used to create a rich and interactive user interface.
 
-### Prerequisites
-
-- Java Development Kit (JDK) 17 or higher.
-- Maven for dependency management.
-
 <h2 id="installation">🛠️ Installation</h2>
 
 1. Clone the repository to your local environment:
@@ -43,28 +38,30 @@ The Radio SPOT Management System is a full-stack Java application developed to f
 git clone https://github.com/lucasrznd/sistema-gspot.git
 ```
 
-2. Configure your database (I used MySQL, but use your preferred database):
+2. Navigate to the project directory:
 
 ```
-spring.datasource.url=${MYSQL_URL}
-spring.datasource.username=${MYSQL_USER}
-spring.datasource.password=${MYSQL_PASSWORD}
-spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+cd sistema-gspot
 ```
 
-3. Navigate to the project directory:
+3. Build the Docker image:
 
 ```
-cd sistema-controle-spots
+docker build -t gspot .
 ```
 
-4. Compile the project using Maven:
+5. Start the application using Docker Compose:
 
 ```
-mvn clean install
+docker-compose up -d
 ```
 
-5. Run the generated JAR file in the target folder or deploy the JAR to your application server.
+### Avaible URL's 
+| url               |                                         
+|----------------------|
+| <kbd>localhost:8080/cadastro/locutor.xhtml</kbd>     
+| <kbd>localhost:8080/cadastro/empresa.xhtml</kbd>     
+| <kbd>localhost:8080/cadastro/spot.xhtml</kbd>
 
 <h2 id="contribution">🤝 Contribution</h2>
 
