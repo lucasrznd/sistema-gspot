@@ -57,13 +57,6 @@ docker build -t gspot .
 docker-compose up -d
 ```
 
-### Avaible URL's 
-| url               |                                         
-|----------------------|
-| <kbd>localhost:8080/cadastro/locutor.xhtml</kbd>     
-| <kbd>localhost:8080/cadastro/empresa.xhtml</kbd>     
-| <kbd>localhost:8080/cadastro/spot.xhtml</kbd>
-
 <h2 id="contribution">🤝 Contribution</h2>
 
 Contributions are welcome! If you have suggestions, improvements, or find bugs, feel free to open an issue or submit a pull request.
